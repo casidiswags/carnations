@@ -1,0 +1,24 @@
+{
+  "to": "my love",
+  "from": "Cassidy",
+  "notes": [
+    {
+      "id": "n1",
+      "text": "Good morning, beautiful. I hope today is as kind to you as you are to me.",
+      "color": "red",
+      "date": "2026-09-25"
+    },
+    {
+      "id": "n2",
+      "text": "Every little moment with you is my favourite part of the day.",
+      "color": "pink",
+      "date": "2026-09-25"
+    },
+    {
+      "id": "n3",
+      "text": "Thank you for being exactly who you are. I love you, always.",
+      "color": "blush",
+      "date": "2026-09-25"
+    }
+  ]
+}

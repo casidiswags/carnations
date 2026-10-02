@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carnations for you</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBE4EA; --paper:#FFF8FA; --ink:#3A1624; --muted:#8A5A6B; --accent:#B3122E; --on-accent:#FFF8FA;
+  --stem:#3E6B48; --leaf:#5C8A5E; --ribbon:#6E2A48; --line:#E9BFCB; --soft:#F6D3DC;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#241019; --paper:#361823; --ink:#FBE4EA; --muted:#C99AAB; --accent:#E0405C; --on-accent:#FFF8FA;
+    --stem:#6FA27A; --leaf:#86B889; --ribbon:#E7A3BD; --line:#55293A; --soft:#44202D;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#241019; --paper:#361823; --ink:#FBE4EA; --muted:#C99AAB; --accent:#E0405C; --on-accent:#FFF8FA;
+  --stem:#6FA27A; --leaf:#86B889; --ribbon:#E7A3BD; --line:#55293A; --soft:#44202D;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fraunces",Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden}
+.wrap{position:relative;max-width:560px;margin:0 auto;padding:40px 20px 48px;text-align:center}
+.pill{position:absolute;top:14px;right:16px;font-size:.88rem;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:.4em 1em;cursor:pointer}
+h1{font-weight:300;font-style:italic;font-size:clamp(2.3rem,9vw,3.5rem);line-height:1.02;letter-spacing:-0.015em;margin:0 0 12px}
+.lede{color:var(--muted);font-size:1.02rem;line-height:1.55;margin:0 auto;max-width:32ch;min-height:3.1em}
+.lede.new{color:var(--ink)}
+svg.bouquet{display:block;width:100%;max-width:470px;height:auto;margin:8px auto 0;overflow:visible}
+.stem{fill:none;stroke:var(--stem);stroke-width:3;stroke-linecap:round}
+.leaf{fill:var(--leaf)}
+.calyx,.budcalyx{fill:var(--stem)}
+.ribbon{fill:var(--ribbon)}
+
+/* flowers */
+.flower{cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;transform-box:fill-box;transform-origin:50% 75%}
+.flower.intro{animation:grow 1s cubic-bezier(.2,.9,.25,1.12) backwards;animation-delay:var(--delay,0s)}
+@keyframes grow{from{transform:translateY(28px) scale(.2);opacity:0}}
+.flower .head{transform-box:fill-box;transform-origin:50% 50%;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.flower:not(.unread):hover .head,.flower.open .head{transform:scale(1.09)}
+.flower .ring{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:4 5;opacity:0}
+.flower:focus-visible .ring{opacity:1}
+.flower:not(.unread) .bud,.flower:not(.unread) .halo{display:none}
+.flower.unread .head{opacity:0}
+.flower.unread .sway{transform-box:view-box;animation:sway 3.6s ease-in-out infinite;animation-delay:var(--sway,0s)}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.halo{transform-box:fill-box;transform-origin:center;animation:pulse 2.6s ease-in-out infinite;opacity:0}
+@keyframes pulse{0%,100%{transform:scale(.6);opacity:0}50%{transform:scale(1.2);opacity:.5}}
+.flower.unread:hover .bud{animation:nudge .6s ease-in-out}
+.bud{transform-box:fill-box;transform-origin:50% 100%}
+@keyframes nudge{30%{transform:scale(1.08,.94)}60%{transform:scale(.96,1.05)}}
+/* blooming sequence */
+.flower.blooming .sway{animation:none}
+.flower.blooming .halo{display:none}
+.flower.blooming .head{opacity:1}
+.flower.blooming .bud{animation:budout .5s cubic-bezier(.5,0,.8,.4) forwards}
+@keyframes budout{40%{transform:scale(1.15,1.2)}100%{transform:scale(1.5,.4);opacity:0}}
+.flower.blooming .calyx{transform-box:fill-box;transform-origin:50% 0;animation:rise .45s .25s cubic-bezier(.2,.9,.3,1) backwards}
+@keyframes rise{from{transform:scaleY(.2);opacity:0}}
+.flower.blooming .petal{transform-box:fill-box;transform-origin:center;animation:unfurl 1.05s cubic-bezier(.16,.9,.22,1.12) backwards;animation-delay:calc(.3s + var(--d) * .1s)}
+@keyframes unfurl{from{transform:scale(0) rotate(-140deg);opacity:0}45%{opacity:1}}
+.spark{animation:drift 1.5s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes drift{from{transform:translate(0,0) rotate(0) scale(.3);opacity:0}15%{opacity:1}to{transform:translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(1);opacity:0}}
+
+.count{color:var(--muted);font-size:.92rem;margin:6px 0 0}
+.actions{margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.hint{color:var(--muted);font-size:.88rem;margin:0}
+button,a.chip{font:inherit;color:inherit}
+.primary{font-size:1.05rem;background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:.8em 1.7em;cursor:pointer;transition:transform .15s}
+.primary:active{transform:scale(.97)}
+.primary[disabled]{opacity:.6;cursor:default}
+button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:10;display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));background:rgba(40,10,22,.5);perspective:900px;animation:fade .3s ease}
+.overlay[hidden]{display:none}
+@keyframes fade{from{background:rgba(40,10,22,0)}}
+@media (min-width:600px){.overlay{align-items:center}}
+.card{position:relative;width:100%;max-width:440px;max-height:86vh;overflow:auto;background:var(--paper);color:var(--ink);border-radius:24px;padding:22px 24px 20px;text-align:left;box-shadow:0 24px 60px rgba(58,22,36,.3);transform-origin:50% 100%;animation:unfold .6s cubic-bezier(.2,.85,.2,1)}
+@keyframes unfold{from{transform:translateY(36px) rotateX(22deg) scale(.95);opacity:0}}
+.card.admin{max-width:520px}
+.close{position:absolute;top:10px;right:10px;width:40px;height:40px;border:0;border-radius:50%;background:none;color:var(--muted);font-size:1.7rem;line-height:1;cursor:pointer}
+.mini{display:block;width:70px;height:70px;margin:0 0 4px -6px;transform-origin:center;animation:spinin .8s cubic-bezier(.2,.9,.25,1.15) .1s backwards}
+@keyframes spinin{from{transform:rotate(-90deg) scale(.3);opacity:0}}
+.note-text{font-family:"Caveat","Segoe Print","Bradley Hand",cursive;font-size:1.85rem;line-height:1.22;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 14px;animation:ink .9s ease .3s backwards}
+@keyframes ink{from{opacity:0;filter:blur(4px);transform:translateY(8px)}}
+.sig{font-style:italic;color:var(--muted);margin:0 0 16px;animation:ink .7s ease .6s backwards}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.link{background:none;border:0;padding:4px 0;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-size:.9rem}
+.card h2{font-weight:400;font-style:italic;font-size:1.6rem;margin:2px 0 6px}
+.card h3{font-weight:500;font-size:1.05rem;margin:0 0 10px}
+.card section{padding:18px 0;border-top:1px solid var(--line)}
+.card section:first-of-type{border-top:0}
+.small{font-size:.85rem;color:var(--muted);margin:6px 0 0;line-height:1.45}
+textarea{width:100%;min-height:140px;resize:vertical;font-family:"Caveat","Segoe Print","Bradley Hand",cursive;font-size:1.55rem;line-height:1.25;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+textarea::placeholder{color:var(--muted);opacity:.8}
+fieldset{border:0;padding:0;margin:14px 0 0}
+legend{font-size:.92rem;color:var(--muted);margin-bottom:8px;padding:0}
+.swatches{display:flex;gap:14px}
+.sw{position:relative;cursor:pointer}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.dot{display:block;width:36px;height:36px;border-radius:50%;border:2px solid transparent;box-shadow:inset 0 0 0 3px var(--paper);transition:transform .2s}
+.sw input:checked + .dot{border-color:var(--ink);transform:scale(1.08)}
+.sw input:focus-visible + .dot{outline:2px solid var(--ink);outline-offset:3px}
+.row-end{margin-top:16px;display:flex;justify-content:flex-end;align-items:center;gap:12px}
+.error{color:var(--accent);font-size:.9rem;margin:8px 0 0;min-height:1em}
+.note-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.note-list li{display:grid;grid-template-columns:14px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--soft)}
+.note-list .sdot{width:12px;height:12px;border-radius:50%}
+.note-list .txt{font-size:.92rem;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.note-list .date{display:block;font-size:.78rem;color:var(--muted)}
+.empty{color:var(--muted);font-size:.92rem;margin:0}
+details summary{cursor:pointer;font-weight:500}
+.names{display:grid;gap:10px;margin-top:12px}
+.names label{display:grid;gap:4px;font-size:.88rem;color:var(--muted)}
+.names input{font:inherit;font-size:1rem;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:10px;padding:.55em .7em}
+.secondary{font-size:.95rem;background:transparent;border:1px solid var(--line);border-radius:999px;padding:.55em 1.2em;cursor:pointer}
+.notify{background:var(--soft);border-radius:18px;padding:16px 16px 14px !important;margin-top:8px;border-top:0 !important;animation:ink .6s ease backwards}
+.notify .msg{font-size:.95rem;line-height:1.45;margin:0 0 12px;padding:10px 12px;border-radius:10px;background:var(--paper);overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-block;font-size:.9rem;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:.5em 1em;cursor:pointer;text-decoration:none}
+.chip.main{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:.65em 1.2em;border-radius:999px;font-size:.95rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:20;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+</style>
+</head>
+<body>
+<template id="shell">
+<main class="wrap">
+  <button class="pill" id="admin-btn" hidden>Admin</button>
+  <h1 id="title"></h1>
+  <p class="lede" id="lede"></p>
+  <svg class="bouquet" id="bouquet" viewBox="0 0 400 620" role="group" aria-label="Bouquet of carnations"></svg>
+  <p class="count" id="count"></p>
+  <div class="actions">
+    <button class="primary" id="write" hidden>Add a note</button>
+    <p class="hint" id="hint" hidden></p>
+  </div>
+</main>
+
+<div class="overlay" id="note-overlay" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="note-heading">
+    <button class="close" id="note-close" aria-label="Close note">&times;</button>
+    <svg class="mini" id="note-mini" viewBox="0 0 64 64" aria-hidden="true"></svg>
+    <h2 id="note-heading" class="sr">A note for you</h2>
+    <p class="note-text" id="note-text"></p>
+    <p class="sig" id="note-sig"></p>
+    <div class="foot"><span id="note-date"></span></div>
+  </div>
+</div>
+
+<div class="overlay" id="admin-overlay" hidden>
+  <div class="card admin" role="dialog" aria-modal="true" aria-labelledby="admin-heading">
+    <button class="close" id="admin-close" aria-label="Close admin">&times;</button>
+    <h2 id="admin-heading">Admin</h2>
+    <p class="small">Only you can use this. She sees the bouquet.</p>
+
+    <section id="connect" hidden>
+      <h3>Connect to GitHub</h3>
+      <p class="small">Paste your fine-grained token (Contents: read and write, for this site's repository only). It's kept in this browser only.</p>
+      <div class="names"><label>GitHub token <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label></div>
+      <p class="error" id="connect-error" role="alert"></p>
+      <div class="row-end"><button class="primary" id="connect-save">Connect</button></div>
+    </section>
+
+    <div id="admin-body">
+    <section class="notify" id="notify" hidden>
+      <h3>Note added</h3>
+      <p class="small" style="margin:0 0 10px">She'll get an email automatically in a minute or two. To send the link yourself:</p>
+      <p class="msg" id="notify-msg"></p>
+      <div class="btns">
+        <button class="chip main" id="copy-msg">Copy message</button>
+        <a class="chip" id="sms-link" target="_blank" rel="noopener">Send as text</a>
+        <a class="chip" id="mail-link" target="_blank" rel="noopener">Send as email</a>
+      </div>
+    </section>
+
+    <section>
+      <h3>Add a note</h3>
+      <label for="write-text" class="sr">Your note</label>
+      <textarea id="write-text" maxlength="600" placeholder="Write something sweet…"></textarea>
+      <fieldset>
+        <legend>Carnation colour</legend>
+        <div class="swatches" id="swatches"></div>
+      </fieldset>
+      <p class="error" id="write-error" role="alert"></p>
+      <div class="row-end"><button class="primary" id="write-save">Add to bouquet</button></div>
+    </section>
+
+    <section>
+      <h3 id="list-heading">Notes in the bouquet</h3>
+      <ul class="note-list" id="note-list" aria-labelledby="list-heading"></ul>
+    </section>
+
+    <section>
+      <details>
+        <summary>Names on the page</summary>
+        <div class="names">
+          <label>Her name <input id="to-name" maxlength="40"></label>
+          <label>Your name <input id="from-name" maxlength="40"></label>
+        </div>
+        <div class="row-end"><button class="secondary" id="save-names">Save names</button></div>
+      </details>
+    </section>
+
+    <section>
+      <button class="secondary" id="preview">Preview as her</button>
+      <p class="small">Turns every note back into an unread bud on this device, so you can watch them bloom.</p>
+      <p class="small"><button class="link" id="sign-out">Disconnect this device</button></p>
+    </section>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</template>
+<div id="root"></div>
+<script>
+(function(){
+  /* ===== Settings: change these to match your GitHub repository ===== */
+  var CONFIG = { owner:'casidiswags', repo:'carnations', branch:'main', dataPath:'notes.json' };
+  /* =================================================================== */
+
+  var COLORS = {
+    red:   {name:'Red',   c:['#8E0F26','#B3122E','#D8435E']},
+    pink:  {name:'Pink',  c:['#B8416A','#E4789A','#F7B6C8']},
+    blush: {name:'Blush', c:['#D08585','#F0B3A9','#FBDAD2']},
+    white: {name:'White', c:['#C9B0B9','#EEE0E5','#FFFFFF']}
+  };
+  var READ_KEY='carnation-read', TOKEN_KEY='carnation-gh-token', DRAFT_KEY='carnation-draft';
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var state = {to:'my love',from:'',notes:[]};
+  var root = document.getElementById('root');
+  root.appendChild(document.getElementById('shell').content.cloneNode(true));
+  var $ = function(id){ return document.getElementById(id); };
+  var busy=false, blooming=false;
+
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+  function ssGet(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } }
+  function ssSet(k,v){ try{ sessionStorage.setItem(k,v); }catch(e){} }
+  function ssDel(k){ try{ sessionStorage.removeItem(k); }catch(e){} }
+  var token = lsGet(TOKEN_KEY);
+  var readIds; try{ readIds = JSON.parse(lsGet(READ_KEY)) || []; }catch(e){ readIds = []; }
+  function isRead(id){ return readIds.indexOf(id) !== -1; }
+  function markRead(id){ if(!isRead(id)){ readIds.push(id); lsSet(READ_KEY, JSON.stringify(readIds)); } }
+  function isAdmin(){ return !!token; }
+  function siteUrl(){ return location.origin + location.pathname; }
+
+  function hash(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+  function rng(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function fmtDate(d){ try{ return new Date(d+'T12:00:00').toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'});}catch(e){return d;} }
+  function today(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function colorOf(k){ return (COLORS[k]||COLORS.red); }
+  function valid(d){ return d && Array.isArray(d.notes); }
+  var toastTimer;
+  function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show');},2800); }
+
+  /* ---------- drawing ---------- */
+  function ruffle(cx,cy,R,rand,rot,sy){
+    var n=22+Math.floor(rand()*9), d='';
+    for(var i=0;i<n*2;i++){
+      var a=rot+i*Math.PI/n;
+      var rr = i%2 ? R*(0.72+rand()*0.12) : R*(0.93+rand()*0.14);
+      d += (i?'L':'M') + (cx+Math.cos(a)*rr).toFixed(1) + ' ' + (cy+Math.sin(a)*rr*sy).toFixed(1);
+    }
+    return d+'Z';
+  }
+  function head(cx,cy,r,key,seed){
+    var rand=rng(seed), c=colorOf(key).c, sy=0.84+rand()*0.1;
+    var layers=[[1,c[1]],[0.84,c[0]],[0.72,c[2]],[0.55,c[1]],[0.4,c[0]],[0.25,c[2]]];
+    var s='<path class="calyx" d="M'+(cx-r*0.22)+' '+(cy+r*0.45)+' Q'+cx+' '+(cy+r*1.25)+' '+(cx+r*0.22)+' '+(cy+r*0.45)+'Z"/>';
+    for(var i=0;i<layers.length;i++){
+      var col=layers[i][1];
+      s+='<path class="petal" style="--d:'+i+'" d="'+ruffle(cx,cy-i*r*0.035,r*layers[i][0],rand,rand()*6.283,sy)+'" fill="'+col+'" stroke="'+col+'" stroke-width="1.2" stroke-linejoin="round"/>';
+    }
+    return s;
+  }
+  function bud(x,y,r,key){
+    var c=colorOf(key).c, w=r*0.3, top=y-r*0.55, base=y+r*0.85, d='M'+(x-w*0.8)+' '+(y-r*0.05), teeth=7;
+    for(var i=0;i<=teeth*2;i++){
+      var px=x-w*0.8+(w*1.6)*(i/(teeth*2));
+      var py=(i%2? top : top+r*0.14) + Math.abs(i-teeth)*r*0.02;
+      d+=' L'+px.toFixed(1)+' '+py.toFixed(1);
+    }
+    d+=' L'+(x+w*0.8)+' '+(y-r*0.05)+'Z';
+    return '<path d="'+d+'" fill="'+c[1]+'" stroke="'+c[0]+'" stroke-width="1" stroke-linejoin="round"/>'+
+      '<path class="budcalyx" d="M'+(x-w*0.95)+' '+(y-r*0.08)+' Q'+(x-w*1.25)+' '+(y+r*0.55)+' '+x+' '+base+' Q'+(x+w*1.25)+' '+(y+r*0.55)+' '+(x+w*0.95)+' '+(y-r*0.08)+' Q'+x+' '+(y+r*0.12)+' '+(x-w*0.95)+' '+(y-r*0.08)+'Z"/>'+
+      '<path d="M'+x+' '+(y+r*0.05)+' L'+x+' '+(base-r*0.1)+'" stroke="rgba(0,0,0,.18)" stroke-width="1.2" fill="none"/>';
+  }
+  function layout(n){
+    var rows=[], cap=2, rem=n;
+    while(rem>0){ var t=Math.min(cap,rem); rows.push(t); rem-=t; cap++; }
+    rows.sort(function(a,b){return b-a;});
+    var R=rows.length, r = n>20?24 : n>9?27 : 31, pos=[];
+    var vy = R>1 ? Math.min(54, 300/(R-1)) : 0;
+    rows.forEach(function(t,k){
+      var y = 400-(R-1-k)*vy;
+      var sp = t>1 ? Math.min(r*2.05, 330/(t-1)) : 0;
+      for(var j=0;j<t;j++) pos.push({x:200+(j-(t-1)/2)*sp, y:y, r:r});
+    });
+    return pos;
+  }
+  var positions=[];
+  function renderBouquet(intro){
+    var svg=$('bouquet'), notes=state.notes, n=notes.length;
+    if(!n){
+      svg.setAttribute('viewBox','0 250 400 360');
+      svg.innerHTML = '<path class="stem" d="M200 590 Q194 470 200 380"/>'+
+        '<path class="leaf" d="M198 500 q-24 -6 -34 -30 q22 4 34 30z"/>'+
+        '<g class="flower unread intro" style="pointer-events:none"><g class="sway" style="transform-origin:200px 400px"><g class="bud">'+bud(200,365,30,'pink')+'</g></g></g>';
+      return;
+    }
+    var pos=layout(n), minY=Infinity, maxY=-Infinity;
+    pos.forEach(function(p,i){
+      var rand=rng(hash(notes[i].id));
+      p.x+=(rand()-0.5)*10; p.y+=(rand()-0.5)*10; p.seed=hash(notes[i].id+'h');
+      minY=Math.min(minY,p.y-p.r); maxY=Math.max(maxY,p.y);
+    });
+    positions=pos;
+    var gy=maxY+95, stems='', leaves='', heads='';
+    pos.forEach(function(p,i){
+      var note=notes[i], rand=rng(p.seed+7), unread=!isRead(note.id);
+      var sx=p.x, sy=p.y+p.r*0.7;
+      var cx=sx+(200-sx)*0.15, cy=sy+(gy-sy)*0.6;
+      stems+='<path class="stem" d="M'+sx.toFixed(1)+' '+sy.toFixed(1)+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' 200 '+gy+'"/>';
+      if(rand()>0.45){
+        var t=0.5, lx=(1-t)*(1-t)*sx+2*(1-t)*t*cx+t*t*200, ly=(1-t)*(1-t)*sy+2*(1-t)*t*cy+t*t*gy;
+        var side = sx<200 ? -1 : 1;
+        leaves+='<path class="leaf" d="M'+lx.toFixed(1)+' '+ly.toFixed(1)+' q'+(side*14)+' -4 '+(side*28)+' -22 q'+(side*-20)+' 1 '+(side*-28)+' 22z"/>';
+      }
+      var cls='flower'+(unread?' unread':'')+(intro?' intro':'');
+      var label = unread ? 'Unread note '+(i+1)+'. Open to let it bloom' : 'Read note '+(i+1)+', '+colorOf(note.color).name.toLowerCase()+' carnation';
+      heads+='<g class="'+cls+'" data-i="'+i+'" tabindex="0" role="button" aria-label="'+esc(label)+'" style="--delay:'+(0.15+i*0.09).toFixed(2)+'s">'+
+        '<g class="sway" style="transform-origin:'+p.x.toFixed(1)+'px '+(p.y+p.r).toFixed(1)+'px;--sway:-'+(rand()*3.6).toFixed(2)+'s">'+
+        '<circle class="halo" cx="'+p.x.toFixed(1)+'" cy="'+(p.y+p.r*0.1).toFixed(1)+'" r="'+(p.r*0.75).toFixed(1)+'" fill="'+colorOf(note.color).c[2]+'"/>'+
+        '<g class="bud">'+bud(p.x,p.y+p.r*0.15,p.r,note.color)+'</g>'+
+        '<g class="head">'+head(p.x,p.y,p.r,note.color,p.seed)+'</g>'+
+        '<ellipse class="ring" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" rx="'+(p.r+7)+'" ry="'+(p.r+5)+'"/></g></g>';
+    });
+    var tails='', k=Math.min(n,6);
+    for(var s=0;s<k;s++){ var off=(s-(k-1)/2)*4; tails+='<path class="stem" d="M200 '+gy+' L'+(200+off*1.6)+' '+(gy+72)+'"/>'; }
+    var bow='<path class="ribbon" d="M200 '+gy+' C176 '+(gy-28)+' 148 '+(gy-4)+' 174 '+(gy+12)+'Z"/>'+
+      '<path class="ribbon" d="M200 '+gy+' C224 '+(gy-28)+' 252 '+(gy-4)+' 226 '+(gy+12)+'Z"/>'+
+      '<path class="ribbon" d="M197 '+(gy+2)+' L180 '+(gy+46)+' L188 '+(gy+42)+' L191 '+(gy+52)+' L201 '+(gy+4)+'Z"/>'+
+      '<path class="ribbon" d="M203 '+(gy+2)+' L222 '+(gy+44)+' L214 '+(gy+41)+' L212 '+(gy+50)+' L199 '+(gy+4)+'Z"/>'+
+      '<ellipse class="ribbon" cx="200" cy="'+gy+'" rx="8" ry="9"/>';
+    var top=Math.floor(minY-30);
+    svg.setAttribute('viewBox','0 '+top+' 400 '+(gy+84-top));
+    svg.innerHTML = stems+tails+leaves+bow+heads+'<g id="sparks"></g>';
+  }
+  function unreadCount(){ var c=0; state.notes.forEach(function(n){ if(!isRead(n.id)) c++; }); return c; }
+  function renderText(){
+    $('title').textContent = 'Carnations for '+(state.to||'you');
+    document.title = 'Carnations for '+(state.to||'you');
+    var n=state.notes.length, u=unreadCount(), lede=$('lede');
+    lede.classList.toggle('new', u>0);
+    if(!n) lede.textContent = isAdmin() ? 'Add a note and a carnation will grow here.' : 'The first carnation is on its way.';
+    else if(u) lede.textContent = (u===1?'A new note is':u+' new notes are')+' waiting. Tap a bud to watch it bloom.';
+    else lede.textContent = 'Every flower holds a note'+(state.from?' from '+state.from:'')+'. Tap one to read it again.';
+    $('count').textContent = n ? (n===1?'1 note in the bouquet':n+' notes in the bouquet') : '';
+  }
+  function renderControls(){
+    $('write').hidden = !isAdmin();
+    $('admin-btn').hidden = !isAdmin();
+    $('hint').hidden = true;
+  }
+  function render(intro){ renderText(); renderBouquet(intro); renderControls(); if(!$('admin-overlay').hidden) renderAdminList(); }
+
+  /* ---------- bloom ---------- */
+  function burst(p,key){
+    var host=$('sparks'); if(!host||!p) return;
+    var c=colorOf(key).c, ns='http://www.w3.org/2000/svg';
+    for(var i=0;i<10;i++){
+      var a=-Math.PI/2+(Math.random()-0.5)*Math.PI*1.5, dist=p.r*(1.4+Math.random()*1.3);
+      var g=document.createElementNS(ns,'g'); g.setAttribute('transform','translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')');
+      var el=document.createElementNS(ns,'path');
+      el.setAttribute('d','M0 -5 C4 -5 5 2 0 6 C-5 2 -4 -5 0 -5Z');
+      el.setAttribute('fill',c[i%3]); el.setAttribute('class','spark');
+      el.setAttribute('style','--tx:'+(Math.cos(a)*dist).toFixed(1)+'px;--ty:'+(Math.sin(a)*dist+18).toFixed(1)+'px;--rot:'+Math.round((Math.random()-0.5)*540)+'deg;animation-delay:'+(Math.random()*0.15).toFixed(2)+'s');
+      g.appendChild(el); host.appendChild(g);
+      (function(node){ setTimeout(function(){ if(node.parentNode) node.parentNode.removeChild(node); },1800); })(g);
+    }
+  }
+  function tapFlower(i){
+    if(blooming) return;
+    var note=state.notes[i]; if(!note) return;
+    var g=document.querySelector('.flower[data-i="'+i+'"]');
+    if(g && g.classList.contains('unread')){
+      markRead(note.id);
+      g.setAttribute('aria-label','Read note '+(i+1)+', '+colorOf(note.color).name.toLowerCase()+' carnation');
+      if(reduced){ g.classList.remove('unread'); renderText(); openNote(i); return; }
+      blooming=true;
+      g.classList.remove('intro');
+      g.classList.add('blooming');
+      setTimeout(function(){ burst(positions[i],note.color); },420);
+      setTimeout(function(){ g.classList.remove('unread','blooming'); blooming=false; renderText(); openNote(i); },1450);
+      return;
+    }
+    openNote(i);
+  }
+
+  /* ---------- overlays ---------- */
+  var lastFocus=null;
+  function openOverlay(id,focusEl){ lastFocus=document.activeElement; $(id).hidden=false; document.body.classList.add('locked'); setTimeout(function(){ (focusEl||$(id).querySelector('button')).focus({preventScroll:true}); },40); }
+  function closeOverlay(id){
+    $(id).hidden=true; document.body.classList.remove('locked');
+    var o=document.querySelector('.flower.open'); if(o) o.classList.remove('open');
+    if(lastFocus && document.contains(lastFocus)) lastFocus.focus({preventScroll:true});
+  }
+  function openNote(i){
+    var note=state.notes[i]; if(!note) return;
+    var g=document.querySelector('.flower[data-i="'+i+'"]'); if(g) g.classList.add('open');
+    var card=$('note-overlay').querySelector('.card');
+    card.style.animation='none'; void card.offsetWidth; card.style.animation='';
+    $('note-mini').innerHTML = head(32,33,25,note.color,hash(note.id+'h'));
+    $('note-text').textContent = note.text;
+    $('note-sig').textContent = state.from ? '— '+state.from : '';
+    $('note-date').textContent = fmtDate(note.date);
+    openOverlay('note-overlay',$('note-close'));
+  }
+
+  /* ---------- admin ---------- */
+  function buildSwatches(){
+    var html='';
+    Object.keys(COLORS).forEach(function(k,i){
+      html+='<label class="sw"><input type="radio" name="color" value="'+k+'"'+(i===0?' checked':'')+'><span class="dot" style="background:'+COLORS[k].c[1]+'"></span><span class="sr">'+COLORS[k].name+'</span></label>';
+    });
+    $('swatches').innerHTML=html;
+  }
+  function renderAdminList(){
+    var list=$('note-list'), notes=state.notes;
+    if(!notes.length){ list.innerHTML='<li style="background:none;padding:0"><p class="empty">No notes yet. Add the first one above.</p></li>'; return; }
+    var html='';
+    for(var i=notes.length-1;i>=0;i--){
+      var n=notes[i];
+      html+='<li><span class="sdot" style="background:'+colorOf(n.color).c[1]+'"></span><span class="txt">'+esc(n.text)+'<span class="date">'+esc(fmtDate(n.date))+'</span></span><button class="link" data-remove="'+esc(n.id)+'">Remove</button></li>';
+    }
+    list.innerHTML=html;
+  }
+  function notifyMessage(){
+    return (state.from ? state.from+' left' : 'There’s')+' a new note for you in your bouquet 🌸 Open it here: '+siteUrl();
+  }
+  function showNotify(){
+    var msg=notifyMessage();
+    $('notify-msg').textContent=msg;
+    $('sms-link').href='sms:?&body='+encodeURIComponent(msg);
+    $('mail-link').href='mailto:?subject='+encodeURIComponent('A new note for you 🌸')+'&body='+encodeURIComponent(msg);
+    $('notify').hidden=false;
+  }
+  function openAdmin(focusText, withNotify){
+    var connected=isAdmin();
+    $('connect').hidden=connected; $('admin-body').hidden=!connected;
+    $('connect-error').textContent=''; $('write-error').textContent='';
+    if(connected){
+      $('to-name').value=state.to||''; $('from-name').value=state.from||'';
+      $('write-text').value = ssGet(DRAFT_KEY) || '';
+      if(withNotify) showNotify(); else $('notify').hidden=true;
+      renderAdminList();
+    }
+    $('admin-overlay').querySelector('.card').scrollTop=0;
+    var focus = !connected ? $('token') : withNotify ? $('copy-msg') : focusText ? $('write-text') : $('admin-close');
+    if($('admin-overlay').hidden) openOverlay('admin-overlay',focus); else focus.focus({preventScroll:true});
+  }
+
+  /* ---------- GitHub ---------- */
+  function b64encode(str){ var bytes=new TextEncoder().encode(str), bin=''; for(var i=0;i<bytes.length;i++) bin+=String.fromCharCode(bytes[i]); return btoa(bin); }
+  function b64decode(b64){ var bin=atob(b64.replace(/\s/g,'')), bytes=new Uint8Array(bin.length); for(var i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i); return new TextDecoder().decode(bytes); }
+  function api(path,opts,tok){
+    opts=opts||{};
+    opts.headers=Object.assign({'Accept':'application/vnd.github+json','Authorization':'Bearer '+(tok||token),'X-GitHub-Api-Version':'2022-11-28'},opts.headers||{});
+    opts.cache='no-store';
+    return fetch('https://api.github.com'+path,opts).then(function(r){
+      if(!r.ok){ var e=new Error('GitHub '+r.status); e.status=r.status; throw e; }
+      return r.json();
+    });
+  }
+  var repoPath='/repos/'+CONFIG.owner+'/'+CONFIG.repo;
+  var contentsPath=repoPath+'/contents/'+CONFIG.dataPath;
+  function fetchRemote(){
+    return api(contentsPath+'?ref='+encodeURIComponent(CONFIG.branch)).then(function(file){
+      var d; try{ d=JSON.parse(b64decode(file.content)); }catch(e){ d=null; }
+      if(!valid(d)) d={to:state.to,from:state.from,notes:[]};
+      return {data:d, sha:file.sha};
+    });
+  }
+  function commit(mutate,message){
+    return fetchRemote().then(function(r){
+      mutate(r.data);
+      return api(contentsPath,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        message:message, content:b64encode(JSON.stringify(r.data,null,2)+'\n'), sha:r.sha, branch:CONFIG.branch
+      })}).then(function(){ return r.data; });
+    });
+  }
+  function persist(mutate,message,after){
+    if(busy) return;
+    busy=true; $('write-save').disabled=true; toast('Saving…');
+    commit(mutate,message).then(function(data){
+      busy=false; $('write-save').disabled=false;
+      state=data; render(false); after();
+    }).catch(function(e){
+      busy=false; $('write-save').disabled=false;
+      if(e.status===401||e.status===403) toast('GitHub rejected the token. Reconnect in Admin.');
+      else if(e.status===404) toast('Couldn’t find '+CONFIG.dataPath+' in '+CONFIG.owner+'/'+CONFIG.repo+'.');
+      else if(e.status===409) toast('The notes changed at the same time. Try again.');
+      else toast('Couldn’t save. Check your connection and try again.');
+    });
+  }
+  function saveNote(){
+    var text=$('write-text').value.trim();
+    if(!text){ $('write-error').textContent='Write a note first.'; $('write-text').focus(); return; }
+    $('write-error').textContent='';
+    var sel=document.querySelector('input[name="color"]:checked');
+    var note={id:'n'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36), text:text, color:sel?sel.value:'red', date:today()};
+    persist(function(d){ d.notes.push(note); }, 'Add note', function(){
+      markRead(note.id); renderBouquet(false);
+      ssDel(DRAFT_KEY); $('write-text').value='';
+      openAdmin(false,true); toast('Carnation added');
+    });
+  }
+  function saveNames(){
+    var to=$('to-name').value.trim()||'my love', from=$('from-name').value.trim();
+    if(to===state.to && from===state.from){ toast('Names are unchanged'); return; }
+    persist(function(d){ d.to=to; d.from=from; }, 'Update names', function(){ toast('Names saved'); });
+  }
+  function removeNote(id,btn){
+    if(busy) return;
+    if(!btn.dataset.armed){ btn.dataset.armed='1'; btn.textContent='Tap to confirm'; setTimeout(function(){ if(btn.isConnected){ btn.dataset.armed=''; btn.textContent='Remove'; } },4000); return; }
+    persist(function(d){ d.notes=d.notes.filter(function(n){ return n.id!==id; }); }, 'Remove note', function(){ toast('Note removed'); });
+  }
+  function connect(){
+    var t=$('token').value.trim(), err=$('connect-error');
+    if(!t){ err.textContent='Paste your token first.'; return; }
+    err.textContent=''; $('connect-save').disabled=true;
+    api(repoPath,{},t).then(function(repo){
+      if(repo.permissions && repo.permissions.push===false) throw {status:403};
+      token=t; lsSet(TOKEN_KEY,t); $('token').value='';
+      renderControls(); renderText(); toast('Connected');
+      return fetchRemote().then(function(r){ state=r.data; render(false); }).catch(function(){});
+    }).then(function(){ if(token) openAdmin(true,false); })
+    .catch(function(e){
+      err.textContent = (e&&e.status===404) ? 'That token can’t see '+CONFIG.owner+'/'+CONFIG.repo+'. Check the repository name and token access.'
+        : (e&&(e.status===401||e.status===403)) ? 'GitHub rejected that token, or it doesn’t have write access.'
+        : 'Couldn’t reach GitHub. Check your connection.';
+    }).then(function(){ $('connect-save').disabled=false; });
+  }
+
+  /* ---------- events ---------- */
+  var bq=$('bouquet');
+  bq.addEventListener('click',function(e){ var g=e.target.closest('.flower[data-i]'); if(g) tapFlower(+g.dataset.i); });
+  bq.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ var g=e.target.closest('.flower[data-i]'); if(g){ e.preventDefault(); tapFlower(+g.dataset.i);} } });
+  $('note-close').addEventListener('click',function(){ closeOverlay('note-overlay'); });
+  $('admin-close').addEventListener('click',function(){ closeOverlay('admin-overlay'); if(location.hash==='#admin') history.replaceState(null,'',location.pathname+location.search); });
+  $('admin-btn').addEventListener('click',function(){ openAdmin(false,false); });
+  $('write').addEventListener('click',function(){ openAdmin(true,false); });
+  $('write-save').addEventListener('click',saveNote);
+  $('save-names').addEventListener('click',saveNames);
+  $('connect-save').addEventListener('click',connect);
+  $('token').addEventListener('keydown',function(e){ if(e.key==='Enter') connect(); });
+  $('note-list').addEventListener('click',function(e){ var b=e.target.closest('[data-remove]'); if(b) removeNote(b.dataset.remove,b); });
+  $('write-text').addEventListener('input',function(){ ssSet(DRAFT_KEY,this.value); });
+  $('copy-msg').addEventListener('click',function(){
+    var msg=notifyMessage(), done=function(){ toast('Message copied'); };
+    var fallback=function(){ var r=document.createRange(); r.selectNodeContents($('notify-msg')); var s=getSelection(); s.removeAllRanges(); s.addRange(r); try{ if(document.execCommand('copy')){ done(); return; } }catch(e){} toast('Message selected. Copy it from there.'); };
+    try{ navigator.clipboard.writeText(msg).then(done,fallback); }catch(e){ fallback(); }
+  });
+  $('preview').addEventListener('click',function(){
+    readIds=[]; lsSet(READ_KEY,'[]');
+    closeOverlay('admin-overlay'); render(true);
+    window.scrollTo({top:0,behavior:reduced?'auto':'smooth'});
+    toast('Showing the bouquet as she sees it');
+  });
+  $('sign-out').addEventListener('click',function(){
+    token=null; lsDel(TOKEN_KEY); closeOverlay('admin-overlay'); render(false); toast('This device is disconnected');
+  });
+  ['note-overlay','admin-overlay'].forEach(function(id){
+    $(id).addEventListener('click',function(e){ if(e.target===$(id)) closeOverlay(id); });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape') return;
+    if(!$('note-overlay').hidden) closeOverlay('note-overlay');
+    else if(!$('admin-overlay').hidden) closeOverlay('admin-overlay');
+  });
+  window.addEventListener('hashchange',function(){ if(location.hash==='#admin') openAdmin(false,false); });
+
+  /* ---------- load ---------- */
+  buildSwatches();
+  renderText(); renderControls();
+  var load = isAdmin()
+    ? fetchRemote().then(function(r){ return r.data; }).catch(function(){ return null; })
+    : Promise.resolve(null);
+  load.then(function(d){
+    if(valid(d)) return d;
+    return fetch(CONFIG.dataPath+'?v='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+  }).then(function(d){
+    if(valid(d)) state=d;
+    render(true);
+    if(location.hash==='#admin') openAdmin(false,false);
+  });
+})();
+</script>
+</body>
+</html>
