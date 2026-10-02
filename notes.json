@@ -7,6 +7,12 @@
       "text": "A test for my notes app",
       "color": "pink",
       "date": "2026-10-02"
+    },
+    {
+      "id": "nmur69bcw136",
+      "text": "test 2: This should grow another flower",
+      "color": "red",
+      "date": "2026-10-02"
     }
   ]
 }
