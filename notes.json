@@ -1,5 +1,12 @@
 {
   "to": "my love",
   "from": "Cassidy",
-  "notes": []
+  "notes": [
+    {
+      "id": "nmur63o75fy",
+      "text": "A test for my notes app",
+      "color": "pink",
+      "date": "2026-10-02"
+    }
+  ]
 }
